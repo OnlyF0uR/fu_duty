@@ -12,6 +12,11 @@ end)
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
   PlayerData = xPlayer
+
+  -- Support for leaving and rejoining while on duty
+  if PlayerData.job.name == 'police' or PlayerData.job.name == 'ambulance' or PlayerData.job.name == 'mechanic' then
+  	exports["rp-radio"]:GivePlayerAccessToFrequencies(1)
+  end
 end)
 
 RegisterNetEvent('esx:setJob')
@@ -35,7 +40,7 @@ Citizen.CreateThread(function()
             if dist < v.InteractRange then
               if IsControlJustReleased(0, 38) then
                 TriggerServerEvent('duty:changejob')
-		-- Remove line below to drop rp-radio support
+                -- Remove line below to drop rp-radio support
                 exports["rp-radio"]:GivePlayerAccessToFrequencies(1)
                 sendNotification('Je bent in dienst gegaan.', 'success', 2500)
               end
@@ -45,7 +50,7 @@ Citizen.CreateThread(function()
             if dist < v.InteractRange then
               if IsControlJustReleased(0, 38) then
                 TriggerServerEvent('duty:changejob')
-		-- Remove line below to drop rp-radio support
+                -- Remove line below to drop rp-radio support
                 exports["rp-radio"]:RemovePlayerAccessToFrequencies(1)
                 sendNotification('Je bent uit dienst gegaan.', 'success', 2500)
               end
@@ -67,6 +72,7 @@ function CheckPlayerJob(jobList)
   end
 end
 
+--notification
 function sendNotification(message, messageType, messageTimeout)
 	TriggerEvent("pNotify:SendNotification", {
 		text = message,
